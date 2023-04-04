@@ -1,0 +1,36 @@
+name: "Build & Upload Resource Pack"
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Build & Upload Pack
+        uses: Sindercube/Packr@main
+        with:
+
+          filename: Blocky Dripstone.zip
+          parts: |
+            blocky_dripstone/*
+          output-directory: build/ 
+          optimize-files: true
+          minecraft-versions: |
+            1.17.1
+            1.18.2
+            1.19.4
+
+          modrinth-id: '2AdSDHZQ'
+          github-repo: ${{ github.event.repository.full_name }}
+
+          release-name: ${{ github.event.release.name }}
+          release-version: ${{ github.event.release.tag_name }}
+          changelog: ${{ github.event.release.body }}
+          prerelease: ${{ github.event.release.prerelease }}
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
